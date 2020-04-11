@@ -7,6 +7,15 @@ module.exports = {
   plugins: [
     {
       resolve: require.resolve(`../gatsby-source-webdav`),
+      options: {
+        baseURL: "http://localhost:8080/remote.php/dav/files",
+        credentials: {
+          username: "admin",
+          password: "password",
+        },
+        recursive: true,
+        sharePath: "/admin",
+      },
     },
     `gatsby-plugin-react-helmet`,
     {

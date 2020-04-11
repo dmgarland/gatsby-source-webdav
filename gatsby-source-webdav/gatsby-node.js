@@ -1,20 +1,23 @@
 const { createClient } = require("webdav");
 
-exports.sourceNodes = async function sourceNodes({
-  actions,
-  createNodeId,
-  createContentDigest
-}) {
+exports.sourceNodes = async function sourceNodes(
+  { actions, createNodeId, createContentDigest },
+  pluginOptions
+) {
   const { createNode } = actions;
+  const {
+    baseURL,
+    credentials,
+    sharePath,
+    recursive,
+    glob = "/**/*.{png,jpg,gif,mp4}"
+  } = pluginOptions;
 
-  const client = createClient("http://localhost:8080/remote.php/dav/files", {
-    username: "admin",
-    password: "password"
-  });
+  const client = createClient(baseURL, credentials);
 
-  const directoryItems = await client.getDirectoryContents("/admin", {
-    deep: true,
-    glob: "/**/*.{png,jpg,gif,mp4}"
+  const directoryItems = await client.getDirectoryContents(sharePath, {
+    deep: recursive,
+    glob
   });
 
   directoryItems.forEach(item => {
