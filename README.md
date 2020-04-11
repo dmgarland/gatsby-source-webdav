@@ -4,7 +4,7 @@ A plugin for sourcing nodes from a WebDAV directory. Useful for generating stati
 
 Please check the version number before you decide to use this in production.
 
-# Developing
+## Developing
 
 There is a `docker-compose.yml` file that brings up a Nextcloud installation to use as a demo share. If desired you can login to the nextcloud instance on http://localhost:8080 using the following credentials:
 
