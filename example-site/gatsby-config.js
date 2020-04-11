@@ -1,10 +1,13 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
-    author: `@gatsbyjs`,
+    title: `WebDAV Example`,
+    description: `The Gatsby default starter using the webDAV plugin to generate pages for each item in Nextcloud`,
+    author: `Dan Garland`,
   },
   plugins: [
+    {
+      resolve: require.resolve(`../gatsby-source-webdav`),
+    },
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,

@@ -1,0 +1,13 @@
+{
+  "name": "gatsby-source-webdav",
+  "version": "1.0.0",
+  "description": "Monorepo to hold a plugin and example that uses it",
+  "main": "index.js",
+  "author": "Dan Garland",
+  "license": "MIT",
+  "workspaces": [
+    "example-site",
+    "gatsby-source-webdav"
+  ],
+  "private": true
+}

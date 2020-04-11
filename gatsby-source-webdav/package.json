@@ -1,0 +1,15 @@
+{
+  "name": "gatsby-source-webdav",
+  "version": "0.1.0",
+  "description": "A gatsby plugin to source nodes from a webdav share",
+  "main": "index.js",
+  "keywords": [
+    "gatsby",
+    "gatsby-plugin"
+  ],
+  "author": "Dan Garland",
+  "license": "MIT",
+  "dependencies": {
+    "webdav": "^3.2.0"
+  }
+}
