@@ -15,6 +15,19 @@ exports.createPages = async ({ graphql, actions }) => {
           type
           etag
           lastmod
+          webDavContent {
+            publicURL
+            childImageSharp {
+              id
+              fluid {
+                src
+                srcSet
+                aspectRatio
+                sizes
+                base64
+              }
+            }
+          }
         }
       }
     }

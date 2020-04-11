@@ -1,6 +1,7 @@
 import React from "react"
 import Layout from "../components/layout"
 import { Link } from "gatsby"
+import Img from "gatsby-image"
 
 const ItemTemplate = ({ pageContext }) => {
   const {
@@ -12,11 +13,22 @@ const ItemTemplate = ({ pageContext }) => {
     type,
     etag,
     lastmod,
+    webDavContent,
   } = pageContext
+
+  const contentType = mime.split("/")[0]
 
   return (
     <Layout>
       <h1>{basename}</h1>
+      {contentType === "image" && (
+        <Img fluid={webDavContent.childImageSharp.fluid} alt={filename} />
+      )}
+      {contentType === "video" && (
+        <video controls width="100%">
+          <source src={webDavContent.publicURL} type={mime} />
+        </video>
+      )}
       <dl>
         <dt>ID</dt>
         <dd>{id}</dd>
