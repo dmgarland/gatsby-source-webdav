@@ -49,6 +49,7 @@ exports.onCreateNode = async ({
   node
 }) => {
   if (node.internal.type === "webdav") {
+    console.log(`Fetching ${node.filename}`);
     await client
       .getFileContents(node.filename)
       .then(buffer =>
@@ -61,6 +62,10 @@ exports.onCreateNode = async ({
           parentNodeId: node.id
         })
       )
+      .then(fileNode => {
+        console.log(`Fetching ${node.filename}`);
+        return fileNode;
+      })
       .then(fileNode => (node.webDavContent___NODE = fileNode.id));
   }
 };
