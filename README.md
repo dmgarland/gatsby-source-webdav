@@ -2,7 +2,67 @@
 
 A plugin for sourcing nodes from a WebDAV directory. Useful for generating static sites from a WebDAV share as a backend, such as Owncloud or Nextcloud.
 
+This is a monorepo containing the plugin an example gatsby starter used to develop the app and serve as a reference.
+
+```
+example-site - gatsby starter that uses this plugin
+gatsby-source-webdav - the actual plugin
+```
+
 Please check the version number before you decide to use this in production.
+
+## How to use
+
+1. Add the plugin to your `gatsby-config.js`, filling in your WebDAV settings.
+
+```
+    {
+      resolve: require.resolve(`../gatsby-source-webdav`),
+      options: {
+        baseURL: "http://localhost:8080/remote.php/dav/files",
+        credentials: {
+          username: "admin",
+          password: "password",
+        },
+        recursive: true,
+        sharePath: "/admin",
+      }
+    }
+```
+
+If all goes well you should see `allWebDav` appear in your GraphQL browser. You ought to be then run a graphql query for the content.
+
+```
+export const query = graphql`
+  query {
+    allWebdav {
+      nodes {
+        id
+        filename
+        basename
+        mime
+        size
+        type
+        etag
+        lastmod
+        webDavContent {
+          publicURL
+          childImageSharp {
+            id
+            fluid {
+              src
+              srcSet
+              aspectRatio
+              sizes
+              base64
+            }
+          }
+        }
+      }
+    }
+  }
+`
+```
 
 ## Developing
 
