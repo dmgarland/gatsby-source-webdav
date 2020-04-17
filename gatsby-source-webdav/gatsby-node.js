@@ -49,23 +49,23 @@ exports.onCreateNode = async ({
   node
 }) => {
   if (node.internal.type === "webdav") {
-    console.log(`Fetching ${node.filename}`);
-    await client
-      .getFileContents(node.filename)
-      .then(buffer =>
-        createFileNodeFromBuffer({
-          buffer,
-          name: node.basename.split(".")[0],
-          getCache,
-          createNode,
-          createNodeId,
-          parentNodeId: node.id
-        })
-      )
-      .then(fileNode => {
-        console.log(`Fetching ${node.filename}`);
-        return fileNode;
-      })
-      .then(fileNode => (node.webDavContent___NODE = fileNode.id));
+    try {
+      const buffer = await client.getFileContents(node.filename);
+      console.log(`Fetched ${node.filename}`);
+
+      const fileNode = await createFileNodeFromBuffer({
+        buffer,
+        name: node.basename.split(".")[0],
+        getCache,
+        createNode,
+        createNodeId,
+        parentNodeId: node.id
+      });
+
+      // Associate the webdev item with the actual content
+      node.webDavContent___NODE = fileNode.id;
+    } catch {
+      console.log(`Failed to download ${node.filename}`);
+    }
   }
 };
