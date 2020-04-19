@@ -30,12 +30,15 @@ Please check the version number before you decide to use this in production.
     }
 ```
 
-If all goes well you should see `allWebDav` appear in your GraphQL browser. You ought to be then run a graphql query for the content.
+If all goes well you should see `allWebDav` appear in your GraphQL browser. You ought to be then run a graphql query for the content. This example filters out any nodes missing associated content nodes.
 
 ```
 export const query = graphql`
   query {
-    allWebdav {
+    allWebdav(
+        sort: { fields: [lastmod], order: DESC }
+        filter: { webDavContent: { id: { ne: null } } }
+      ) {
       nodes {
         id
         filename

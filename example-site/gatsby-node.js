@@ -5,7 +5,10 @@ exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
   const webdavItems = await graphql(`
     query {
-      allWebdav {
+      allWebdav(
+        sort: { fields: [lastmod], order: DESC }
+        filter: { webDavContent: { id: { ne: null } } }
+      ) {
         nodes {
           id
           filename
