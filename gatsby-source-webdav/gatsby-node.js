@@ -49,7 +49,7 @@ exports.onCreateNode = async ({
   node
 }) => {
   if (node.internal.type === "webdav") {
-    try {
+    const associateFileNode = async () => {
       const buffer = await client.getFileContents(node.filename);
       console.log(`Fetched ${node.filename}`);
 
@@ -64,8 +64,16 @@ exports.onCreateNode = async ({
 
       // Associate the webdev item with the actual content
       node.webDavContent___NODE = fileNode.id;
-    } catch {
-      console.log(`Failed to download ${node.filename}`);
+    };
+
+    for (let retries = 3; retries > 0; retries--) {
+      try {
+        return await associateFileNode();
+      } catch {
+        console.log(`Failed to download ${node.filename}, retrying`);
+      }
     }
+
+    console.log(`Failed to download ${node.filename}`);
   }
 };
