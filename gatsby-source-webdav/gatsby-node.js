@@ -1,6 +1,20 @@
 const { createClient } = require("webdav");
 const { createFileNodeFromBuffer } = require("gatsby-source-filesystem");
 
+const retry = async ({ callback, interval, retries }) => {
+  try {
+    return await callback();
+  } catch (error) {
+    console.log(error);
+    if (retries) {
+      await new Promise(resolve => setTimeout(resolve, interval));
+      return retry({ callback, interval, retries: retries-- });
+    } else {
+      throw new Error(`Failed`);
+    }
+  }
+};
+
 var client;
 
 exports.onPreInit = async (_, pluginOptions) => {
@@ -52,7 +66,6 @@ exports.onCreateNode = async ({
     const associateFileNode = async () => {
       const buffer = await client.getFileContents(node.filename);
       console.log(`Fetched ${node.filename}`);
-
       const fileNode = await createFileNodeFromBuffer({
         buffer,
         name: node.basename.split(".")[0],
@@ -65,15 +78,10 @@ exports.onCreateNode = async ({
       // Associate the webdev item with the actual content
       node.webDavContent___NODE = fileNode.id;
     };
-
-    for (let retries = 3; retries > 0; retries--) {
-      try {
-        return await associateFileNode();
-      } catch {
-        console.log(`Failed to download ${node.filename}, retrying`);
-      }
-    }
-
-    console.log(`Failed to download ${node.filename}`);
+    return await retry({
+      callback: associateFileNode,
+      retries: 3,
+      interval: 5000
+    });
   }
 };
