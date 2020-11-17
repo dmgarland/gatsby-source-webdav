@@ -1,6 +1,6 @@
 {
   "name": "gatsby-source-webdav",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A gatsby plugin to source nodes from a webdav share",
   "main": "index.js",
   "keywords": [

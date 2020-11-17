@@ -82,9 +82,7 @@ See the example site on GitHub for an example of how to use with a sample `gatsb
 
 ## When do I use this plugin?
 
-* If you want to write your own SASS and use with your React components
-* As an alternative to styled components
-* If you want to build your own style guide from scratch
+* If you want to make static websites using assets from a WebDAV share
 
 ## How to run tests
 
