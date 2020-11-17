@@ -78,8 +78,10 @@ Password: password
 
 To see an example Gatsby site that uses the plugin, you can run the following:
 
-> docker-compose up
-> yarn workspace example-site 
-> yarn workspace example-site develop
+```
+docker-compose up
+yarn workspace example-site 
+yarn workspace example-site develop
+```
 
 And visit http://localhost:8000. You should see a listing of the demo files provided by Nextcloud.
