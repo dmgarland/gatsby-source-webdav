@@ -36,12 +36,15 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
     }
     const davNode = getNode(fileNode.parent)
 
-    const slug = createFilePath({ node, getNode, basePath: `pages` })
+    const slugPart = path.parse(davNode.filename.toLowerCase())
+
     createNodeField({
       node,
       name: `slug`,
-      value: davNode.filename.toLowerCase(),
+      value: `${slugPart.dir}/${slugPart.name}`,
     })
+
+    // TODO: Add title (frontmatter, or filename) and date (frontmatter, or mdate) defaults into fields
   }
 }
 

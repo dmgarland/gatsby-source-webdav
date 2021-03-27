@@ -11,14 +11,14 @@ module.exports = {
     {
       resolve: require.resolve(`../gatsby-source-webdav`),
       options: {
-        baseURL: "http://localhost:8080/remote.php/dav/files/admin",
+        baseURL: "http://localhost:8080/remote.php/dav/files/admin/Documents",
         credentials: {
           username: "admin",
           password: "admin",
         },
         recursive: true,
         glob: "**/*.{md,png}",
-        sharePath: "/Documents/",
+        sharePath: "/",
       },
     },
     `gatsby-plugin-react-helmet`,
