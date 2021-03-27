@@ -1,5 +1,9 @@
 const { createClient } = require("webdav");
-const { createFileNodeFromBuffer } = require("gatsby-source-filesystem");
+const {
+  createFileNodeFromBuffer,
+  createFilePath,
+} = require("gatsby-source-filesystem");
+const mime = require("mime/lite");
 
 const retry = async ({ callback, interval, retries }) => {
   try {
@@ -7,7 +11,7 @@ const retry = async ({ callback, interval, retries }) => {
   } catch (error) {
     console.log(error);
     if (retries) {
-      await new Promise(resolve => setTimeout(resolve, interval));
+      await new Promise((resolve) => setTimeout(resolve, interval));
       return retry({ callback, interval, retries: retries-- });
     } else {
       throw new Error(`Failed`);
@@ -31,14 +35,14 @@ exports.sourceNodes = async function sourceNodes(
   const {
     sharePath,
     recursive,
-    glob = "/**/*.{png,jpg,gif,mp4}"
+    glob = "/**/*.{png,jpg,gif,mp4}",
   } = pluginOptions;
   const directoryItems = await client.getDirectoryContents(sharePath, {
     deep: recursive,
-    glob
+    glob,
   });
 
-  directoryItems.forEach(item => {
+  directoryItems.forEach((item) => {
     const nodeMeta = {
       id: createNodeId(item.filename),
       parent: null,
@@ -46,9 +50,9 @@ exports.sourceNodes = async function sourceNodes(
       internal: {
         type: "webdav",
         mediaType: item.mime,
-        content: JSON.stringify(item),
-        contentDigest: createContentDigest(item)
-      }
+        // content: JSON.stringify(item), // Was interfering with Remark - wasn't really used anyway
+        contentDigest: createContentDigest(item),
+      },
     };
 
     const node = Object.assign({}, item, nodeMeta);
@@ -59,29 +63,35 @@ exports.sourceNodes = async function sourceNodes(
 exports.onCreateNode = async ({
   actions: { createNode, createNodeField },
   getCache,
+  getNode,
   createNodeId,
-  node
+  node,
 }) => {
   if (node.internal.type === "webdav") {
     const associateFileNode = async () => {
       const buffer = await client.getFileContents(node.filename);
-      console.log(`Fetched ${node.filename}`);
+      // Necessary, otherwise Gatsby interpretes md files as binary and breaks Remark
+      const ext = mime.getExtension(node.internal.mediaType);
+
+      const name = node.basename.split(".")[0];
       const fileNode = await createFileNodeFromBuffer({
         buffer,
-        name: node.basename.split(".")[0],
+        name,
         getCache,
         createNode,
         createNodeId,
-        parentNodeId: node.id
+        parentNodeId: node.id,
+        ext: !!ext ? `.${ext}` : undefined,
       });
 
       // Associate the webdev item with the actual content
       node.webDavContent___NODE = fileNode.id;
     };
+
     return await retry({
       callback: associateFileNode,
       retries: 3,
-      interval: 5000
+      interval: 5000,
     });
   }
 };

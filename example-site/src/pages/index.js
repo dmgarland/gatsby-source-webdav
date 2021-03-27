@@ -16,6 +16,17 @@ const IndexPage = ({ data }) => (
         </li>
       ))}
     </ul>
+
+    <h2>Markdown Posts</h2>
+    <ul>
+      {data.allMarkdownRemark.nodes
+        .filter(item => !!item.frontmatter.title) // No title, no index
+        .map(item => (
+          <li>
+            <Link to={item.fields.slug}>{item.frontmatter.title}</Link>
+          </li>
+        ))}
+    </ul>
   </Layout>
 )
 
@@ -27,6 +38,19 @@ export const query = graphql`
       nodes {
         id
         basename
+      }
+    }
+    allMarkdownRemark(
+      filter: { parent: { parent: { internal: { type: { eq: "webdav" } } } } }
+    ) {
+      nodes {
+        fields {
+          slug
+        }
+        excerpt
+        frontmatter {
+          title
+        }
       }
     }
   }

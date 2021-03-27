@@ -6,15 +6,19 @@ module.exports = {
   },
   plugins: [
     {
+      resolve: `gatsby-transformer-remark`,
+    },
+    {
       resolve: require.resolve(`../gatsby-source-webdav`),
       options: {
-        baseURL: "http://localhost:8080/remote.php/dav/files",
+        baseURL: "http://localhost:8080/remote.php/dav/files/admin",
         credentials: {
           username: "admin",
-          password: "password",
+          password: "admin",
         },
         recursive: true,
-        sharePath: "/admin",
+        glob: "**/*.{md,png}",
+        sharePath: "/Documents/",
       },
     },
     `gatsby-plugin-react-helmet`,
