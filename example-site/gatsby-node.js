@@ -34,14 +34,24 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
     if (!fileNode.parent) {
       return
     }
-    const davNode = getNode(fileNode.parent)
 
-    const slugPart = path.parse(davNode.filename.toLowerCase())
+    const davNode = getNode(fileNode.parent)
+    console.log("item", davNode)
+
+    const namePath = path.parse(davNode.filename)
+
+    const title = (node.frontmatter && node.frontmatter.title) || namePath.name
+
+    createNodeField({
+      node,
+      name: `title`,
+      value: title,
+    })
 
     createNodeField({
       node,
       name: `slug`,
-      value: `${slugPart.dir}/${slugPart.name}`,
+      value: `${namePath.dir}/${namePath.name}`.toLowerCase(),
     })
 
     // TODO: Add title (frontmatter, or filename) and date (frontmatter, or mdate) defaults into fields
