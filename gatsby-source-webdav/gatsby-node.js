@@ -37,31 +37,40 @@ exports.sourceNodes = async function sourceNodes(
     recursive,
     glob = "/**/*.{png,jpg,gif,mp4}",
   } = pluginOptions;
-  const directoryItems = await client.getDirectoryContents(sharePath, {
-    deep: recursive,
-    glob,
-  });
+  try {
+    const directoryItems = await client.getDirectoryContents(sharePath, {
+      deep: recursive,
+      glob,
+    });
 
-  directoryItems.forEach((item) => {
-    const nodeMeta = {
-      id: createNodeId(item.filename),
-      parent: null,
-      children: [],
-      internal: {
-        type: "webdav",
-        mediaType: item.mime,
-        // content: JSON.stringify(item), // Was interfering with Remark - wasn't really used anyway
-        contentDigest: createContentDigest(item),
-      },
-    };
+    if (directoryItems.length === 0) {
+      throw new Error("No webdav items found, aborting");
+    }
 
-    const node = Object.assign({}, item, nodeMeta);
-    createNode(node);
-  });
+    directoryItems.forEach((item) => {
+      const nodeMeta = {
+        id: createNodeId(item.filename),
+        parent: null,
+        children: [],
+        internal: {
+          type: "webdav",
+          mediaType: item.mime,
+          content: JSON.stringify(item), // Was interfering with Remark - wasn't really used anyway
+          contentDigest: createContentDigest(item),
+        },
+      };
+
+      const node = Object.assign({}, item, nodeMeta);
+      createNode(node);
+    });
+  } catch (err) {
+    console.error(err);
+    console.error("Failed to fetch webdav items");
+  }
 };
 
 exports.onCreateNode = async ({
-  actions: { createNode, createNodeField },
+  actions: { createNode, createNodeField, createParentChildLink },
   getCache,
   getNode,
   createNodeId,
@@ -86,6 +95,8 @@ exports.onCreateNode = async ({
 
       // Associate the webdev item with the actual content
       node.webDavContent___NODE = fileNode.id;
+
+      createParentChildLink({ parent: node, child: fileNode });
     };
 
     return await retry({
@@ -95,3 +106,5 @@ exports.onCreateNode = async ({
     });
   }
 };
+
+// exports.setFieldsOnGraphQLNodeType = require("./extend-file-node");

@@ -10,7 +10,7 @@
   "author": "Dan Garland",
   "license": "MIT",
   "dependencies": {
-    "webdav": "^3.2.0",
+    "webdav": "^4.2.1",
     "mime": "^2.4.4"
   }
 }

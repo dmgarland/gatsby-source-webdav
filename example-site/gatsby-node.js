@@ -36,7 +36,6 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
     }
 
     const davNode = getNode(fileNode.parent)
-    console.log("item", davNode)
 
     const namePath = path.parse(davNode.filename)
 

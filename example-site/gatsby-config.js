@@ -7,6 +7,9 @@ module.exports = {
   plugins: [
     {
       resolve: `gatsby-transformer-remark`,
+      options: {
+        plugins: [`gatsby-remark-images`, `gatsby-remark-webdav`],
+      },
     },
     {
       resolve: require.resolve(`../gatsby-source-webdav`),
@@ -17,7 +20,7 @@ module.exports = {
           password: "admin",
         },
         recursive: true,
-        glob: "**/*.{md,png}",
+        glob: "**/*.{md,png,jpg,jpeg}",
         sharePath: "/",
       },
     },
