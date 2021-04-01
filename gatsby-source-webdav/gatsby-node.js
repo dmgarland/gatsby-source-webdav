@@ -1,8 +1,5 @@
 const { createClient } = require("webdav");
-const {
-  createFileNodeFromBuffer,
-  createFilePath,
-} = require("gatsby-source-filesystem");
+const { createFileNodeFromBuffer } = require("gatsby-source-filesystem");
 const mime = require("mime/lite");
 
 const retry = async ({ callback, interval, retries }) => {
@@ -35,7 +32,7 @@ exports.sourceNodes = async function sourceNodes(
   const {
     sharePath,
     recursive,
-    glob = "/**/*.{png,jpg,gif,mp4}",
+    glob = "/**/*.{png,jpg,gif,mp4,md}",
   } = pluginOptions;
   try {
     const directoryItems = await client.getDirectoryContents(sharePath, {
@@ -70,15 +67,15 @@ exports.sourceNodes = async function sourceNodes(
 };
 
 exports.onCreateNode = async ({
-  actions: { createNode, createNodeField, createParentChildLink },
+  actions: { createNode, createParentChildLink },
   getCache,
-  getNode,
   createNodeId,
   node,
 }) => {
   if (node.internal.type === "webdav") {
     const associateFileNode = async () => {
       const buffer = await client.getFileContents(node.filename);
+
       // Necessary, otherwise Gatsby interpretes md files as binary and breaks Remark
       const ext = mime.getExtension(node.internal.mediaType);
 
@@ -106,5 +103,3 @@ exports.onCreateNode = async ({
     });
   }
 };
-
-// exports.setFieldsOnGraphQLNodeType = require("./extend-file-node");
