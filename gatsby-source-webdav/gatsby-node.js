@@ -93,6 +93,7 @@ exports.onCreateNode = async ({
       // Associate the webdev item with the actual content
       node.webDavContent___NODE = fileNode.id;
 
+      // Makes it possible to reference the File node from the DAV node
       createParentChildLink({ parent: node, child: fileNode });
     };
 

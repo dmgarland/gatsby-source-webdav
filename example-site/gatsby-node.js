@@ -1,4 +1,3 @@
-const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require("path")
 
 exports.createPages = async ({ graphql, actions }) => {
@@ -52,19 +51,8 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
       name: `slug`,
       value: `${namePath.dir}/${namePath.name}`.toLowerCase(),
     })
-
-    // TODO: Add title (frontmatter, or filename) and date (frontmatter, or mdate) defaults into fields
   }
 }
-
-// if (node.internal.type === "MarkdownRemark") {
-//   console.log("!! Creating slug", node);
-//   createNodeField({
-//     node,
-//     name: "slug",
-//     value: node.filename.toLowerCase(),
-//   });
-// }
 
 const davFilesQuery = `
   query {
