@@ -52,7 +52,9 @@ exports.sourceNodes = async function sourceNodes(
         internal: {
           type: "webdav",
           mediaType: item.mime,
-          content: JSON.stringify(item), // Was interfering with Remark - wasn't really used anyway
+          // Was interfering with Remark - wasn't really used anyway
+          // - It creates two file-nodes and one is unusable by remark
+          //content: JSON.stringify(item),
           contentDigest: createContentDigest(item),
         },
       };
